@@ -2,7 +2,6 @@ package com.amdexa.auth.config;
 
 import com.amdexa.auth.service.GroupService;
 import com.amdexa.auth.service.UserService;
-import com.amdexa.auth.service.repository.Group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,15 +54,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public UserDetailsService userDetailsService() {
         return username -> {
             com.amdexa.auth.service.repository.User user = userService.getUser(username);
-            groupService.getGroup("user");
             if (null != user) {
+                String[] roles = groupService.getGroups(username).stream().map(g -> g.getName().toUpperCase()).toArray(String[]::new);
                 if (null != request.getAttribute("javax.servlet.request.X509Certificate")) {
                     return new User(username, "none",
                             AuthorityUtils
-                                    .commaSeparatedStringToAuthorityList("USER"));
+                                    .createAuthorityList(roles));
                 } else {
                     User.UserBuilder users = User.withDefaultPasswordEncoder();
-                    return users.username(username).password("password").roles("USER", "ADMIN").build();
+                    return users.username(username).password("password").roles(roles).build();
                 }
             } else {
                 throw new UsernameNotFoundException(String.format("User %s not found", username));
