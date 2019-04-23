@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Configuration
 @EnableWebSecurity
@@ -61,12 +63,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             AuthorityUtils
                                     .createAuthorityList(roles));
                 } else {
-                    User.UserBuilder users = User.withDefaultPasswordEncoder();
-                    return users.username(username).password("password").roles(roles).build();
+                    String encodedPassword = Stream.of(user.getPassword().split(","))
+                            .mapToInt(Integer::valueOf).mapToObj(c -> String.valueOf((char) c))
+                            .collect(Collectors.joining());
+                    return User.withUsername(username).password(encodedPassword.replace("{SSHA}", "{ldap}")).roles(roles).build();
                 }
             } else {
                 throw new UsernameNotFoundException(String.format("User %s not found", username));
-
             }
 
         };
