@@ -12,6 +12,10 @@ public class Session {
 
     private String username;
     private String userDetails;
+    private String sessionId;
+    private long creationTime;
+    private long lastAccessedTime;
+    private long expiryTime;
 
     public String getUsername() {
         return username;
@@ -35,5 +39,37 @@ public class Session {
 
     public void setUserDetails(String userDetails) {
         this.userDetails = userDetails;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public long getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(long creationTime) {
+        this.creationTime = creationTime;
+    }
+
+    public long getLastAccessedTime() {
+        return lastAccessedTime;
+    }
+
+    public void setLastAccessedTime(long lastAccessedTime) {
+        this.lastAccessedTime = lastAccessedTime;
+    }
+
+    public long getExpiryTime() {
+        return expiryTime;
+    }
+
+    public void setExpiryTime(long expiryTime) {
+        this.expiryTime = expiryTime;
     }
 }
