@@ -15,7 +15,7 @@ public class SessionScheduler {
     @Autowired
     private SessionRepository sessionRepository;
 
-    @Scheduled(cron = "*/2 * * * *")
+    @Scheduled(cron = "*/2 * * * * ?")
     public void sessionCleanup() {
         List<Session> expirySessions = new ArrayList<>();
         sessionRepository.findAll().forEach(s -> {
